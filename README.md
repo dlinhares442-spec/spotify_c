@@ -1,1 +1,1 @@
-# Simula-o-de-SPOTIFY-em-C-
+# Simula-o-de-SPOTIFY-em-C++-
