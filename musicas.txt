@@ -1,0 +1,56 @@
+4521;EARFQUAKE;Tyler, the Creator;190;1840
+1337;See You Again;Tyler, the Creator;180;1620
+8820;NEW MAGIC WAND;Tyler, the Creator;195;1310
+2764;Yonkers;Tyler, the Creator;250;970
+6093;WUSYANAME;Tyler, the Creator;216;1105
+3318;Who Dat Boy;Tyler, the Creator;203;1470
+9147;IFHY;Tyler, the Creator;218;860
+5702;Sorry Not Sorry;Tyler, the Creator;188;740
+1089;My Own Summer (Shove It);Deftones;215;1230
+7436;Change (In the House of Flies);Deftones;300;1590
+2251;Be Quiet and Drive (Far Away);Deftones;307;1175
+8605;Digital Bath;Deftones;255;690
+4170;Sextape;Deftones;247;805
+6988;Hexagram;Deftones;240;520
+3045;Passenger;Deftones;367;935
+9512;Cherry Waves;Deftones;318;1380
+1874;Minerva;Deftones;255;1015
+5391;Castelos e Ruinas;BK;230;1450
+7720;Gigantes;BK;210;1090
+2936;Exu nas Escolas;BK;245;880
+8264;Humble;Kendrick Lamar;177;2150
+4608;Not Like Us;Kendrick Lamar;274;2400
+1523;DNA;Kendrick Lamar;185;1960
+6347;Alright;Kendrick Lamar;219;1730
+9071;Sicko Mode;Travis Scott;312;1880
+3782;Goosebumps;Travis Scott;243;1660
+5116;Nights;Frank Ocean;307;1520
+7859;Pyramids;Frank Ocean;592;760
+2480;Thinkin Bout You;Frank Ocean;200;1341
+8933;Creep;Radiohead;238;1990
+4095;Karma Police;Radiohead;261;1610
+1762;Smells Like Teen Spirit;Nirvana;301;2210
+6529;Come as You Are;Nirvana;219;1480
+3204;Passarinhos;Emicida;290;615
+9388;Negro Drama;Racionais MCs;454;1795
+5847;Diario de um Detento;Racionais MCs;461;1260
+2619;Nao Existe Amor em SP;Criolo;330;1045
+7173;Bohemian Rhapsody;Queen;354;2320
+4436;Another One Bites the Dust;Queen;215;1870
+1950;Blinding Lights;The Weeknd;200;2290
+8512;Starboy;The Weeknd;230;1750
+3667;Redbone;Childish Gambino;327;1415
+6281;Genesis;Grimes;256;395
+9825;Pink + White;Frank Ocean;184;1130
+2107;Bad Guy;Billie Eilish;194;1930
+5560;Ocean Eyes;Billie Eilish;200;1280
+7394;Heart-Shaped Box;Nirvana;281;1190
+4852;Everlong;Foo Fighters;250;1570
+1216;Black Hole Sun;Soundgarden;318;1060
+8049;Lithium;Nirvana;257;1340
+3571;Money Trees;Kendrick Lamar;386;1650
+6714;Boredom;Tyler, the Creator;320;455
+9230;Passionfruit;Drake;298;1710
+2845;God's Plan;Drake;199;2040
+5978;Lose Yourself;Eminem;326;2260
+7602;The Real Slim Shady;Eminem;284;1830
