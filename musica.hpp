@@ -3,5 +3,12 @@
 
 #include <string>
 using namespace std; 
-        //Aqui vai ter a estrutura musica
+struct Musica {
+        int id;
+        string titulo;
+        string artista;
+        int duracaoSegundos;
+        int reproducoes;
+};
+
 #endif
