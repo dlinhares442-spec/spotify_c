@@ -180,3 +180,34 @@ int catalogoMusicas::contagemDeNos()
     return contarRecursivo(raiz);
 }
 // Identação com shift + alt + f, atalho do VS Code.
+
+// Carregar o arquivo TXT - Feita por: Davi Linhares
+int carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo) {
+    ifstream arquivo(nomeArquivo); // Abre o arquivo TXT e cria um objeto de leitura (Tipo o CIN) chamado arquivo
+    string linha; // Onde vai ser guardado cada linha por vez
+    int quantidade = 0; // Quantas musicas ja foram copiadas
+
+    if (!arquivo.is_open()) {
+        return quantidade; // Confere se o arquivo abriu, se não abriu ele retorna
+    }
+
+    while (getline(arquivo, linha)) { // getline lê uma linha do arquivo e atribui o valor a linha, enquanto existir linhas continua. O objeto "arquivo" guarda sua própria posição de leitura e avança sozinho para a próxima linha
+        if (linha.empty()) { // Se a linha estiver vazia, pula para próxima
+            continue;
+        }
+        stringstream ss(linha); // O ss recebe uma cópia da linha e cria um marcador interno dele
+        string campo; // Recebe as strings que devem ser transformadas em números
+        Musica m; // Criação da música
+
+        getline(ss, campo, ';');  m.id = stoi(campo); // O marcador de SS avança até chegar em ";" e atribui esse resultado a campo. Stoi converte a string em um número e coloca no ID
+        getline(ss, m.titulo, ';'); // O marcador de SS avança até chegar em ";" e atribui esse resultado a m.artista
+        getline(ss, m.artista, ';'); // O marcador de SS avança até chegar em ";" e atribui esse resultado a m.artista
+        getline(ss, campo, ';');  m.duracaoSegundos = stoi(campo); // O marcador de SS avança até chegar em ";" e atribui esse resultado a campo. Stoi converte a string em um número e coloca em segundos
+        getline(ss, campo, ';');  m.reproducoes = stoi(campo); // O marcador de SS avança até chegar em ";" e atribui esse resultado a campo. Stoi converte a string em um número e coloca a quantidade de reproduções
+
+        if (catalogo.inserir(m)) { // Se o ID não for igual a outro já existente, ele não insere nem aumenta a quantidade
+            quantidade++;
+        }
+    }
+    return quantidade; // Retorna a quantidade de músicas adicionadas
+}
