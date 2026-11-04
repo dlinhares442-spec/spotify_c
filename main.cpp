@@ -1,14 +1,13 @@
 #include <iostream>
 #include "musica.hpp"
-#include "teste.hpp"
-#include "buscaeordenacao.hpp"
+// #include "teste.hpp"
+// #include "buscaeordenacao.hpp"
 #include "abb.hpp"
 #include "lista.hpp"
 #include "FilaReproducao.hpp"
 using namespace std;
-#include <fstream>
-#include <sstream>
-
+#include <fstream> // Ler o arquivo TXT
+#include <sstream> // Ler o arquivo TXT
 
 int main() {
     int opcao;
@@ -51,12 +50,19 @@ int main() {
             case 1: {
                 cout << "Insira o ID da musica: ";
                 cin >> id;
+
                 Musica *musicainserir = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
                 if (musicainserir == nullptr) { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
                     cout << "ID não encontrado" << endl;
                     break;
                 }
-                minhaplaylist.adicionarplaylist(*musicainserir); // Adiciona a música achada
+
+                if (minhaplaylist.contem(id)) {
+                    cout << "Musica ja esta na playlist." << endl;
+                    break;
+                }
+
+                minhaplaylist.adicionar(*musicainserir); // Adiciona a música achada
                 cout << "Musica adicionada com sucesso!" << endl;
                 break;
             }
@@ -76,7 +82,6 @@ int main() {
                 int idaux;
                 cout << "Insira o ID que você quer mover (A musica sera colocado atras da referencia): ";
                 cin >> id;
-                cin.ignore();
                 cout << "Insira o ID que você usar de referência: ";
                 cin >> idaux;
                 bool verificar;
@@ -105,18 +110,9 @@ int main() {
                 break;
             }
             case 6: {
-                Musica tocada;
-                if (!reproducao.tocarProxima(tocada)) {
-                    cout << "Fila vazia!" << endl;
-                    break;
-                }
-                Musica *original = catalogo.buscarPorID(tocada.id);
-                if (original != nullptr) {
-                    original->reproducoes++;   // efeito real no catalogo
-                }
-                cout << "Tocando: " << tocada.titulo << " - " << tocada.artista << endl;
+                reproducao.tocarProxima(catalogo);
                 break;
-            {
+            }
             case 7: {
                 reproducao.verProxima();
                 break;
@@ -126,24 +122,28 @@ int main() {
                 break;
             }
             case 9: {
-                Musica novamusica;// Lendo todas as informações da nova musica
-                cout << "Insira o ID da musica: ";
+                Musica novamusica;
+
+                cout << "Insira o ID da musica: "; // Lendo todas as informações da nova musica
                 cin >> novamusica.id;
-                cin.ignore();
-                cout << "Insira o titulo da musica: ";
-                cin >> novamusica.titulo;
-                cin.ignore();
-                cout << "Insira o artista da musica: ";
-                cin >> novamusica.artista;
-                cin.ignore();
                 cout << "Insira a duracao em segundos da musica: ";
                 cin >> novamusica.duracaoSegundos;
-                cin.ignore();
                 cout << "Insira a quantidade de reproducoes da musica: ";
                 cin >> novamusica.reproducoes;
                 cin.ignore();
 
-                catalogo.inserir(novamusica);
+                cout << "Insira o titulo da musica: ";
+                getline(cin, novamusica.titulo);
+                cout << "Insira o artista da musica: ";
+                getline(cin, novamusica.artista);
+
+                if(!catalogo.inserir(novamusica)) 
+                {
+                    cout << "ID ja existente no catalogo!";
+                }
+
+                cout << "Musica inserida com sucesso!";
+                
                 break;
             }
             case 10: {
@@ -164,10 +164,16 @@ int main() {
                 cout << "Insira o ID da musica: ";
                 cin >> id;
                 bool verificar = catalogo.remover(id); // Busco a música no  catálogo pelo ID
+
+                if (minhaplaylist.contem(id))  {
+                    minhaplaylist.remover(id);
+                }
+
                 if (!verificar) { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
                     cout << "ID não encontrado" << endl;
                     break;
                 }
+
                 cout << "Musica removida com sucesso!" << endl;
                 break;
             }

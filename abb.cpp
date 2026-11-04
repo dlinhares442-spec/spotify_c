@@ -1,5 +1,7 @@
 // Matheus Viana R. Pereira - Catálogo de Músicas com ABB
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "abb.hpp"
 using namespace std;
 
@@ -179,10 +181,9 @@ int catalogoMusicas::contagemDeNos()
 { // Função pública para retornar a quantidade de nós na árvore
     return contarRecursivo(raiz);
 }
-// Identação com shift + alt + f, atalho do VS Code.
 
 // Carregar o arquivo TXT - Feita por: Davi Linhares
-int carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo) {
+int catalogoMusicas::carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo) {
     ifstream arquivo(nomeArquivo); // Abre o arquivo TXT e cria um objeto de leitura (Tipo o CIN) chamado arquivo
     string linha; // Onde vai ser guardado cada linha por vez
     int quantidade = 0; // Quantas musicas ja foram copiadas
@@ -211,3 +212,11 @@ int carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo) {
     }
     return quantidade; // Retorna a quantidade de músicas adicionadas
 }
+
+bool catalogoMusicas::incrementarReproducoes(int id) {
+    Musica *m = buscarPorID(id);
+    if (m == nullptr) return false;
+    m->reproducoes++;
+    return true;
+}
+// Identação com shift + alt + f, atalho do VS Code.

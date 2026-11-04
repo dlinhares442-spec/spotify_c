@@ -38,6 +38,7 @@ public:
     int altura();                // Retorna a altura da árvore
     int contagemDeNos();         // Retorna a quantidade de nós na árvore
     int carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo);
+    bool incrementarReproducoes(int id);
 };
 
 #endif

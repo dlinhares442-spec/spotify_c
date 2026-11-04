@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include "abb.hpp" 
 
 using namespace std;
 
@@ -13,7 +14,7 @@ private:
 
 public:
     void adicionar(const Musica &musica);
-    void tocarProxima();
+    void tocarProxima(catalogoMusicas &catalogo);
     void verProxima();
     void verTamanho();
 };
