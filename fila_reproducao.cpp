@@ -1,6 +1,6 @@
 #include "FilaReproducao.hpp"
 
-void FilaReproducao::adicionar(string musica) {
+void FilaReproducao::adicionar(const Musica &musica) {
     fila.push(musica);
 }
 
