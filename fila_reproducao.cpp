@@ -15,7 +15,7 @@ void FilaReproducao::tocarProxima() {
 
 void FilaReproducao::verProxima() {
     if (!fila.empty()) {
-        cout << "Proxima musica: " << fila.front() << endl;
+        cout << "Proxima musica: " << fila.front().titulo;
     } else {
         cout << "Fila vazia!" << endl;
     }
