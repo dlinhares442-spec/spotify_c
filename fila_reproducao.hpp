@@ -12,7 +12,7 @@ private:
     queue<string> fila;
 
 public:
-    void adicionar(string musica);
+    void adicionar(const Musica &musica);
     void tocarProxima();
     void verProxima();
     void verTamanho();
