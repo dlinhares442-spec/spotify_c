@@ -37,6 +37,7 @@ public:
     void listarEmOrdem();        // Lista todas as músicas da árvore em ordem crescente de ID
     int altura();                // Retorna a altura da árvore
     int contagemDeNos();         // Retorna a quantidade de nós na árvore
+    int carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo);
 };
 
 #endif
