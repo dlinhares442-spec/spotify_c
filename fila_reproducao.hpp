@@ -4,19 +4,19 @@
 #include <iostream>
 #include <queue>
 #include <string>
-#include "abb.hpp" 
+#include "catalogo.hpp" 
 
 using namespace std;
 
 class FilaReproducao {
 private:
-    queue<string> fila;
+    queue<Musica> fila;
 
 public:
-    void adicionar(const Musica &musica);
-    void tocarProxima(catalogoMusicas &catalogo);
-    void verProxima();
-    void verTamanho();
+    void adicionar(const Musica &musica); // Adiciona uma música à fila de reprodução
+    void tocarProxima(catalogoMusicas &catalogo); // Toca a próxima música da fila de reprodução e incrementa o contador de reproduções no catálogo
+    void verProxima(); // Mostra a próxima música da fila de reprodução sem removê-la
+    void verTamanho(); // Mostra a quantidade de músicas na fila de reprodução
 };
 
 #endif
