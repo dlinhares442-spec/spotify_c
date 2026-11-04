@@ -6,7 +6,7 @@ void FilaReproducao::adicionar(const Musica &musica) {
 
 void FilaReproducao::tocarProxima() {
     if (!fila.empty()) {
-        cout << "Tocando: " << fila.front() << endl;
+        cout << "Tocando: " << fila.front().titulo << endl;
         fila.pop();
     } else {
         cout << "Fila vazia!" << endl;
