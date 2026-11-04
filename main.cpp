@@ -1,52 +1,29 @@
 #include <iostream>
 #include "musica.hpp"
-#include "teste.cpp"
-#include "buscaeordenacao.cpp"
-#include "teste.cpp"
+#include "teste.hpp"
+#include "buscaeordenacao.hpp"
+#include "abb.hpp"
+#include "lista.hpp"
+#include "FilaReproducao.hpp"
 using namespace std;
 #include <fstream>
 #include <sstream>
 
-// Carregar o arquivo TXT
-No* carregarMusicas(const string& nomeArquivo, No* raiz, int& quantidade) {
-    ifstream arquivo(nomeArquivo);
-    string linha;
-    quantidade = 0;
-
-    if (!arquivo.is_open()) {
-        return raiz;
-    }
-
-    while (getline(arquivo, linha)) {
-        if (linha.empty()) {
-            continue;
-        }
-        stringstream ss(linha);
-        string campo;
-        Musica m;
-
-        getline(ss, campo, ';');  m.id = stoi(campo);
-        getline(ss, m.titulo, ';');
-        getline(ss, m.artista, ';');
-        getline(ss, campo, ';');  m.duracaoSegundos = stoi(campo);
-        getline(ss, campo, ';');  m.reproducoes = stoi(campo);
-
-        raiz = inserirNaABB(raiz, m);
-        quantidade++;
-    }
-    return raiz;
-}
 
 int main() {
     int opcao;
-    int quantidade = 0;
+    catalogoMusicas catalogo; // Crio um catalogo
+    Playlist minhaplaylist; //Cria a playlist
+    FilaReproducao reproducao;
+    int id; // Vai ser usado várias vezes
     
-    raiz = carregarMusicas("musicas.txt", raiz, quantidade);
-    if (quantidade == 0) {
+    int quantidade = catalogo.carregarMusicas("musicas.txt", catalogo); // Carrega as músicas dentro do TXT e guarda a quantidade de músicas adicionadas
+    if (quantidade == 0) { // Confere se as músicas foram carregadas
         cout << "Erro: nenhuma musica carregada. Confira o arquivo musicas.txt." << endl;
         return 1;
     }
     cout << quantidade << " musicas carregadas." << endl;
+
     do { 
         cout << "\n------------- SPOTIPY -------------" << endl;
         cout << "\n--- PLAYLIST ---" << endl;
@@ -71,51 +48,147 @@ int main() {
         cin >> opcao;
 
         switch (opcao) {
-            case 1:
-                // Playlist: pedir ID, buscar na ABB, adicionar na playlist
+            case 1: {
+                cout << "Insira o ID da musica: ";
+                cin >> id;
+                Musica *musicainserir = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
+                if (musicainserir == nullptr) { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
+                    cout << "ID não encontrado" << endl;
+                    break;
+                }
+                minhaplaylist.adicionarplaylist(*musicainserir); // Adiciona a música achada
+                cout << "Musica adicionada com sucesso!" << endl;
                 break;
-            case 2:
-                // Playlist: pedir ID, remover da playlist
+            }
+            case 2: {
+                cout << "Insira o ID da musica: ";
+                cin >> id;
+                bool verificar;
+                verificar = minhaplaylist.remover(id); // Tenta retirar a musica respectiva ao ID da playlist
+                if (verificar == false) { // Se houve falha ao remover exibe um aviso e finaliza o case
+                    cout << "Falha ao remover musica da playlist." << endl;
+                    break;
+                }
+                cout << "Musica removida com sucesso!" << endl;
                 break;
-            case 3:
-                // Playlist: pedir ID a mover e ID de referencia, chamar moverMusica
+            }
+            case 3: {
+                int idaux;
+                cout << "Insira o ID que você quer mover (A musica sera colocado atras da referencia): ";
+                cin >> id;
+                cin.ignore();
+                cout << "Insira o ID que você usar de referência: ";
+                cin >> idaux;
+                bool verificar;
+                verificar = minhaplaylist.moverMusica(id, idaux); // Tenta mover a música de lugar
+                if (verificar == false) { // Se houve falha ao mover exibe um aviso e finaliza o case
+                    cout << "Falha ao mover a musica da playlist." << endl;
+                    break;
+                }
+                cout << "Musica movida com sucesso!" << endl;
                 break;
-            case 4:
-                // Playlist: listar
+            }
+            case 4: {
+                minhaplaylist.listar();
                 break;
-            case 5:
-                // Fila: pedir ID, checar se existe na ABB, dar push
+            }
+            case 5: {
+                cout << "Insira o ID da musica: ";
+                cin >> id;
+                Musica *musicainserir = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
+                if (musicainserir == nullptr) { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
+                    cout << "ID não encontrado" << endl;
+                    break;
+                }
+                reproducao.adicionar(*musicainserir); // Adiciona a música achada
+                cout << "Musica adicionada com sucesso!" << endl;
                 break;
-            case 6:
-                // Fila: checar se esta vazia, tirar ID, buscar na ABB, reproducoes++
+            }
+            case 6: {
+                Musica tocada;
+                if (!reproducao.tocarProxima(tocada)) {
+                    cout << "Fila vazia!" << endl;
+                    break;
+                }
+                Musica *original = catalogo.buscarPorID(tocada.id);
+                if (original != nullptr) {
+                    original->reproducoes++;   // efeito real no catalogo
+                }
+                cout << "Tocando: " << tocada.titulo << " - " << tocada.artista << endl;
                 break;
-            case 7:
-                // Fila: checar se esta vazia, mostrar front()
+            {
+            case 7: {
+                reproducao.verProxima();
                 break;
-            case 8:
-                // Fila: mostrar size()
+            }
+            case 8: {
+                reproducao.verTamanho();
                 break;
-            case 9:
-                // Catalogo: pedir dados da musica, inserirNaABB
+            }
+            case 9: {
+                Musica novamusica;// Lendo todas as informações da nova musica
+                cout << "Insira o ID da musica: ";
+                cin >> novamusica.id;
+                cin.ignore();
+                cout << "Insira o titulo da musica: ";
+                cin >> novamusica.titulo;
+                cin.ignore();
+                cout << "Insira o artista da musica: ";
+                cin >> novamusica.artista;
+                cin.ignore();
+                cout << "Insira a duracao em segundos da musica: ";
+                cin >> novamusica.duracaoSegundos;
+                cin.ignore();
+                cout << "Insira a quantidade de reproducoes da musica: ";
+                cin >> novamusica.reproducoes;
+                cin.ignore();
+
+                catalogo.inserir(novamusica);
                 break;
-            case 10:
-                // Catalogo: pedir ID, buscarNaABB, mostrar (checar nullptr)
+            }
+            case 10: {
+                cout << "Insira o ID da musica: ";
+                cin >> id;
+                Musica *musicaachada = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
+                if (musicaachada == nullptr) { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
+                    cout << "ID não encontrado" << endl;
+                    break;
+                }
+                cout << "Titulo: " << musicaachada->titulo << endl;
+                cout << "artista: " << musicaachada->artista  << endl;
+                cout << "duracao: " << musicaachada->duracaoSegundos  << "S" << endl;
+                cout << "reproducoes: " << musicaachada->reproducoes  << endl;
                 break;
-            case 11:
-                // Catalogo: pedir ID, removerDaABB
+            }
+            case 11: {
+                cout << "Insira o ID da musica: ";
+                cin >> id;
+                bool verificar = catalogo.remover(id); // Busco a música no  catálogo pelo ID
+                if (!verificar) { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
+                    cout << "ID não encontrado" << endl;
+                    break;
+                }
+                cout << "Musica removida com sucesso!" << endl;
                 break;
-            case 12:
-                // Catalogo: percorrerEmOrdem
+            }
+            case 12: {
+                catalogo.listarEmOrdem();
                 break;
-            case 13:
-                // Catalogo: alturaABB
+            }
+            case 13: {
+                int altura = catalogo.altura();
+                cout << "A altura e: "<< altura << endl;
                 break;
-            case 14:
-                // Catalogo: contarNos
+            }
+            case 14: {
+                int contagem = catalogo.contagemDeNos();
+                cout << "A contagem e: "<< contagem <<  endl;
                 break;
-            case 0:
+            }
+            case 0: {
                 cout << "Saindo..." << endl;
                 break;
+            }
             default:
                 cout << "Opcao invalida." << endl;
                 break;
