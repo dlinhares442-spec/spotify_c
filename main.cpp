@@ -1,17 +1,19 @@
 #include <iostream>
+#include <string>
+#include <vector> // Vetor do catálogo (cases 16 a 18)
 #include "musica.hpp"
-// #include "teste.hpp"
-// #include "buscaeordenacao.hpp"
 #include "catalogo.hpp"
 #include "playlist.hpp"
 #include "fila_reproducao.hpp"
+#include "busca.hpp"
+#include "ordenacao.hpp"
+// #include "teste.hpp"           // Ainda não usado: entra quando o modo de teste (19) for feito
 using namespace std;
-#include <fstream> // Ler o arquivo TXT
-#include <sstream> // Ler o arquivo TXT
 
 int main()
 {
     int opcao;
+    int nplaylist = 0;
     catalogoMusicas catalogo; // Crio um catalogo
     Playlist minhaplaylist;   // Cria a playlist
     FilaReproducao reproducao;
@@ -33,18 +35,24 @@ int main()
         cout << " 2 - Remover musica" << endl; // Remove uma música da playlist pelo ID
         cout << " 3 - Mover musica" << endl; // Move uma música para antes de outra música na playlist
         cout << " 4 - Listar a playlist" << endl; // Lista todas as músicas da playlist, marcando a atual
+        cout << " 5 - Buscar na playlist (pelo nome)" << endl;
         cout << "\n--- FILA DE REPRODUCAO ---" << endl;
-        cout << " 5 - Adicionar na fila" << endl; // Adiciona uma música à fila de reprodução pelo ID
-        cout << " 6 - Tocar proxima" << endl; // Toca a próxima música da fila de reprodução e incrementa o contador de reproduções no catálogo
-        cout << " 7 - Ver proxima" << endl; // Mostra a próxima música da fila de reprodução sem removê-la
-        cout << " 8 - Ver tamanho da fila" << endl; // Mostra a quantidade de músicas na fila de reprodução
+        cout << " 6 - Adicionar na fila" << endl; // Adiciona uma música à fila de reprodução pelo ID
+        cout << " 7 - Tocar proxima" << endl; // Toca a próxima música da fila de reprodução e incrementa o contador de reproduções no catálogo
+        cout << " 8 - Ver proxima" << endl; // Mostra a próxima música da fila de reprodução sem removê-la
+        cout << " 9 - Ver tamanho da fila" << endl; // Mostra a quantidade de músicas na fila de reprodução
         cout << "\n--- CATALOGO (ABB) ---" << endl;
-        cout << " 9 - Inserir musica" << endl; // Insere uma nova música no catálogo (ABB) com todas as informações
-        cout << "10 - Buscar por ID" << endl; // Busca uma música no catálogo (ABB) pelo ID e mostra todas as informações dela
-        cout << "11 - Remover musica" << endl; // Remove uma música do catálogo (ABB) pelo ID
-        cout << "12 - Listar em ordem de ID" << endl; // Lista todas as músicas do catálogo (ABB) em ordem crescente de ID
-        cout << "13 - Altura da arvore" << endl; // Mostra a altura da árvore (ABB)
-        cout << "14 - Quantidade de nos" << endl; // Mostra a quantidade de nós na árvore (ABB)
+        cout << "10 - Inserir musica" << endl; // Insere uma nova música no catálogo (ABB) com todas as informações
+        cout << "11 - Buscar por ID" << endl; // Busca uma música no catálogo (ABB) pelo ID e mostra todas as informações dela
+        cout << "12 - Remover musica" << endl; // Remove uma música do catálogo (ABB) pelo ID
+        cout << "13 - Listar em ordem de ID" << endl; // Lista todas as músicas do catálogo (ABB) em ordem crescente de ID
+        cout << "14 - Altura da arvore" << endl; // Mostra a altura da árvore (ABB)
+        cout << "15 - Quantidade de nos" << endl; // Mostra a quantidade de nós na árvore (ABB)
+        cout << "\n--- RANKING ---" << endl;
+        cout << "16 - Mostrar ranking (mais tocadas primeiro)" << endl; // Mostra o ranking ordenado por repetições das mais tocadas para as menos
+        cout << "17 - Musica mais reproduzida" << endl; // Mostra a musica com mais reproducoes
+        cout << "18 - Buscar no ranking por reproducoes" << endl; // Busca uma musica pela quantidade de reproduções
+        cout << "19 - Modo de teste (50, 500 e 5000 registros)" << endl;
         cout << "\n 0 - Sair" << endl;
         cout << "Escolha uma opcao: ";
         cin >> opcao;
@@ -52,11 +60,11 @@ int main()
         switch (opcao)
         {
         case 1:
-        {
+        {   
+            int acessos = 0;
             cout << "Insira o ID da musica: ";
             cin >> id;
-
-            Musica *musicainserir = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
+            Musica *musicainserir = catalogo.buscarPorID(id, acessos); // Busco a música no  catálogo pelo ID
             if (musicainserir == nullptr)
             { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
                 cout << "ID não encontrado" << endl;
@@ -70,6 +78,7 @@ int main()
             }
 
             minhaplaylist.adicionar(*musicainserir); // Adiciona a música achada
+            nplaylist++;
             cout << "Musica adicionada com sucesso!" << endl;
             break;
         }
@@ -84,6 +93,7 @@ int main()
                 cout << "Falha ao remover musica da playlist." << endl;
                 break;
             }
+            nplaylist--;
             cout << "Musica removida com sucesso!" << endl;
             break;
         }
@@ -111,9 +121,32 @@ int main()
         }
         case 5:
         {
+            int acessos=0;
+            string nomemusica;
+            cout << "Insira o nome da musica que voce quer buscar: ";
+            cin.ignore(); // Tira o enter de opcao
+            getline(cin, nomemusica); // Lê o nome inteiro, mesmo com espaços
+            int tamanho = 0;
+            vector<Musica> v = minhaplaylist.TransformarparaVetor(tamanho);
+            int pos = buscaSequencialNome(v.data(), tamanho, nomemusica, acessos);
+            if (pos == -1) { // Se a posição for -1 é porque ela não existe
+                cout << "Musica nao encontrada na playlist." << endl;
+                break;
+            }
+            Musica achada = v[pos];
+            cout << "Titulo: " << achada.titulo << endl;
+            cout << "Artista: " << achada.artista << endl;
+            cout << "Duracao: " << achada.duracaoSegundos << "S" << endl;
+            cout << "Reproducoes: " << achada.reproducoes << endl;
+            cout << "Comparacoes: " << acessos << endl;
+            break;
+        }
+        case 6:
+        {
+            int acessos = 0;
             cout << "Insira o ID da musica: ";
             cin >> id;
-            Musica *musicainserir = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
+            Musica *musicainserir = catalogo.buscarPorID(id, acessos); // Busco a música no  catálogo pelo ID
             if (musicainserir == nullptr)
             { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
                 cout << "ID não encontrado" << endl;
@@ -123,22 +156,22 @@ int main()
             cout << "Musica adicionada com sucesso!" << endl;
             break;
         }
-        case 6:
+        case 7:
         {
             reproducao.tocarProxima(catalogo);
             break;
         }
-        case 7:
+        case 8:
         {
             reproducao.verProxima();
             break;
         }
-        case 8:
+        case 9:
         {
             reproducao.verTamanho();
             break;
         }
-        case 9:
+        case 10:
         {
             Musica novamusica;
 
@@ -166,14 +199,15 @@ int main()
 
             break;
         }
-        case 10:
+        case 11:
         {
             cout << "Insira o ID da musica: ";
             cin >> id;
-            Musica *musicaachada = catalogo.buscarPorID(id); // Busco a música no  catálogo pelo ID
+            int acessos = 0;
+            Musica *musicaachada = catalogo.buscarPorID(id, acessos); // Busco a música no  catálogo pelo ID
             if (musicaachada == nullptr)
             { // Se nenhuma música com esse ID foi encontrada, Avisa e sai do case
-                cout << "ID não encontrado" << endl;
+                cout << "ID não encontrado  (" << acessos << " acessos)" << endl;
                 break;
             }
             cout << "Titulo: " << musicaachada->titulo << endl;
@@ -182,7 +216,7 @@ int main()
             cout << "reproducoes: " << musicaachada->reproducoes << endl;
             break;
         }
-        case 11:
+        case 12:
         {
             cout << "Insira o ID da musica: ";
             cin >> id;
@@ -198,26 +232,90 @@ int main()
             if (minhaplaylist.contem(id))
             {
                 minhaplaylist.remover(id);
+                nplaylist--; // Saiu da playlist, então diminui a quantidade de músicas
             }
 
             cout << "Musica removida com sucesso!" << endl;
             break;
         }
-        case 12:
+        case 13:
         {
             catalogo.listarEmOrdem(); 
             break;
         }
-        case 13:
+        case 14:
         {
             int altura = catalogo.altura();
             cout << "A altura e: " << altura << endl;
             break;
         }
-        case 14:
+        case 15:
         {
             int contagem = catalogo.contagemDeNos();
             cout << "A contagem e: " << contagem << endl;
+            break;
+        }
+        case 16:
+        {
+            int tamanho = 0;
+            int comparacoes = 0;
+            int trocas = 0;
+            vector<Musica> v = catalogo.TransformarparaVetor(tamanho);
+            if (tamanho == 0) { // Se o tamanho for 0 (não ter musicas no catalogo)
+                cout << "Catalogo vazio." << endl;
+                break;
+            } 
+            quickSort (v.data(), tamanho, comparacoes, trocas, 0, tamanho-1); // Naturalmente os vetores passam os endereços da primeira posição como parâmetro, mas não funciona ssim nessa biblioteca e então usamos a função data()
+            for (int i=0;i<tamanho;i++) {
+                cout << i+1 << " lugar: " << v[i].titulo << " - " << v[i].reproducoes << "repeticoes" << endl;
+            }
+            break;
+        }
+        case 17:
+        {
+            int tamanho = 0;
+            int comparacoes = 0;
+            int trocas = 0;
+            vector<Musica> v = catalogo.TransformarparaVetor(tamanho);
+            if (tamanho == 0) { // Se o tamanho for 0 (não ter musicas no catalogo)
+                cout << "Catalogo vazio." << endl;
+                break;
+            } 
+            quickSort (v.data(), tamanho, comparacoes, trocas, 0, tamanho-1); // Naturalmente os vetores passam os endereços da primeira posição como parâmetro, mas não funciona ssim nessa biblioteca e então usamos a função data()
+            cout << "A musica mais tocada e: " << v.front().titulo << " - Reproducoes:" << v.front().reproducoes << endl;
+            break;
+        }
+        case 18:
+        {
+            int tamanho = 0;
+            int repetir;
+            cout << "Insira a quantidade de repeticoes da música: ";
+            cin >> repetir;
+            vector<Musica> v = catalogo.TransformarparaVetor(tamanho);
+            if (tamanho == 0) { // Se o tamanho for 0 (não ter musicas no catalogo)
+                cout << "Catalogo vazio." << endl;
+                break;
+            } 
+            Musica achada;
+            achada.id=-1;
+            for (int i=0;i<tamanho;i++) {
+                if (repetir==v[i].reproducoes) {
+                    achada = v[i];
+                    break;
+                }
+            }
+            if (achada.id==-1) {
+                cout << "Nao existem musicas com essa quantidade de reproducoes" << endl;
+            }
+            else {
+                cout << "Musica encontrada: " << achada.titulo << endl;
+            }
+            break;
+        }
+        case 19:
+        {
+            // A espera do teste
+            cout << "Opcao ainda em construcao." << endl;
             break;
         }
         case 0:

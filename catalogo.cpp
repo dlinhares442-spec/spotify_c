@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <algorithm> // Para usar a função max
+#include <algorithm>
 #include "catalogo.hpp"
 using namespace std;
 
@@ -77,33 +77,12 @@ No *catalogoMusicas::removerRecursivo(No *no, int id, bool &ok)
         else
         {
             No *temp = minimoRecursivo(no->direito);
-            no->musica = temp->musica;
+            no->musica = temp->musica; // Estava dando erro aqui não sei porque, mas compila
             no->direito = removerRecursivo(no->direito, temp->musica.id, ok);
         }
     }
 
     return no;
-}
-
-Musica *catalogoMusicas::buscarRecursivo(No *no, int id)
-{ // Função auxiliar recursiva para buscar uma música na árvore pelo ID
-    if (no == nullptr)
-    {
-        return nullptr; // ID não encontrado
-    }
-
-    if (id < no->musica.id)
-    {
-        return buscarRecursivo(no->esquerdo, id);
-    }
-    else if (id > no->musica.id)
-    {
-        return buscarRecursivo(no->direito, id);
-    }
-    else
-    {
-        return &(no->musica); // ID encontrado
-    }
 }
 
 void catalogoMusicas::emOrdemRecursivo(No *no)
@@ -163,11 +142,6 @@ bool catalogoMusicas::remover(int id)
     return ok; // Retorna true se a remoção foi bem-sucedida, false caso contrário
 }
 
-Musica *catalogoMusicas::buscarPorID(int id)
-{                                     // Função pública para buscar uma música na árvore pelo ID
-    return buscarRecursivo(raiz, id); // Retorna ponteiro para a música se encontrada, nullptr caso contrário
-}
-
 void catalogoMusicas::listarEmOrdem()
 { // Função pública para listar todas as músicas da árvore em ordem crescente de ID
     emOrdemRecursivo(raiz);
@@ -183,7 +157,7 @@ int catalogoMusicas::contagemDeNos()
     return contarRecursivo(raiz);
 }
 
-// Carregar o arquivo TXT - Feita por: Davi Linhares
+// Feitos por: Davi Linhares
 int catalogoMusicas::carregarMusicas(const string &nomeArquivo, catalogoMusicas &catalogo)
 {
     ifstream arquivo(nomeArquivo); // Abre o arquivo TXT e cria um objeto de leitura (Tipo o CIN) chamado arquivo
@@ -222,12 +196,56 @@ int catalogoMusicas::carregarMusicas(const string &nomeArquivo, catalogoMusicas 
     return quantidade; // Retorna a quantidade de músicas adicionadas
 }
 
-bool catalogoMusicas::incrementarReproducoes(int id)
-{ // Função para incrementar o contador de reproduções de uma música pelo ID
-    Musica *m = buscarPorID(id);
+bool catalogoMusicas::incrementarReproducoes(int id, int &acessos) {
+    Musica *m = buscarPorID(id, acessos);
     if (m == nullptr)
         return false;
     m->reproducoes++;
     return true;
+}
+
+// Algoritimo de busca na ABB
+Musica *catalogoMusicas::buscarRecursivo(No *no, int id, int &acessos) {
+    if (no == nullptr)
+    {
+        return nullptr; // ID não encontrado
+    }
+
+    acessos++;
+
+    if (id < no->musica.id)
+    {
+        return buscarRecursivo(no->esquerdo, id, acessos);
+    }
+    else if (id > no->musica.id)
+    {
+        return buscarRecursivo(no->direito, id, acessos);
+    }
+    else
+    {
+        return &(no->musica); // ID encontrado
+    }
+}
+
+Musica *catalogoMusicas::buscarPorID(int id, int &acessos) {
+    return buscarRecursivo(raiz, id, acessos);
+}
+
+// Aqui nos transformamos a árvore em um vetor para poder manipular ele de melhores formas nas demais estruturas (lista e fila), deixando assim a busca da ABB exclusiva para as funções de árvore
+
+void catalogoMusicas::TransformarVetorRecursivo(No *no, vector<Musica> &v, int &tamanho) {
+    if (no == nullptr) {// Não tem músicas no catálogo
+        return;
+    }
+    TransformarVetorRecursivo(no->esquerdo, v, tamanho); // Olha a esquerda da árvore
+    v.push_back(no->musica); // puxa a musica do no atual para dentro do vetor; Aqui está com linha vermelha mas está compilando certinho (provável erro do editor)
+    tamanho++;
+    TransformarVetorRecursivo(no->direito, v, tamanho); // olha a direita da árvore
+}
+
+vector<Musica> catalogoMusicas::TransformarparaVetor(int &tamanho) {
+    vector<Musica> v; // Cria o vetor
+    TransformarVetorRecursivo(raiz, v, tamanho);
+    return v; 
 }
 // Identação com shift + alt + f, atalho do VS Code.

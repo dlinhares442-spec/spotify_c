@@ -1,10 +1,9 @@
 #ifndef FILA_REPRODUCAO_HPP
 #define FILA_REPRODUCAO_HPP
 
-#include <iostream>
+
 #include <queue>
-#include <string>
-#include "catalogo.hpp" 
+#include "catalogo.hpp" // catalogoMusicas (tocarProxima) e Musica
 
 using namespace std;
 

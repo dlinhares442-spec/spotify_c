@@ -40,6 +40,8 @@ bool Playlist::remover(int id)
     return false; // ID não encontrado
 }
 
+// Ainda não usadas no main: descomentar junto com as declarações no playlist.hpp
+/*
 Musica *Playlist::proxima()
 { // Avança para a próxima música (circular)
     if (musicas.empty())
@@ -78,6 +80,7 @@ Musica *Playlist::musicaAtual()
 
     return &(*atual);
 }
+*/
 
 list<Musica>::iterator Playlist::encontrar(int id)
 { // Procura uma música pelo ID na playlist
@@ -143,5 +146,23 @@ void Playlist::listar() const
              << "ID: " << it->id << ", Título: " << it->titulo << ", Artista: " << it->artista
              << ", Duração: " << it->duracaoSegundos << "s" << endl;
     }
+}
+
+// Funções feitas por: Davi Linhares
+void Playlist::TransformarVetorRecursivo(list<Musica> &copia, vector<Musica> &v, int &tamanho) {
+    if (copia.empty()) {
+        return;
+    } // Se a lista esta vazia retorna
+    v.push_back(copia.front()); // puxa para o vetor a frente da lista
+    copia.pop_front(); // Descarta a frente da lista
+    tamanho++;
+    TransformarVetorRecursivo(copia, v, tamanho); // Chama de novo e faz isso até ela estar vazia
+}
+
+vector<Musica> Playlist::TransformarparaVetor(int &tamanho) {
+    vector<Musica> v;
+    list<Musica> copia = musicas; // Cria uma cópia da lista para não alterar a lista original
+    TransformarVetorRecursivo(copia, v, tamanho);
+    return v;
 }
 // Identação com shift + alt + f, atalho do VS Code.

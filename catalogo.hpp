@@ -1,8 +1,9 @@
 // Matheus Viana R. Pereira - Catálogo de Músicas com ABB
-#ifndef ABB_HPP
-#define ABB_HPP
+#ifndef CATALOGO_HPP
+#define CATALOGO_HPP
 
 #include "musica.hpp"
+#include <vector>
 using namespace std;
 
 struct No
@@ -22,24 +23,26 @@ private:
     No *inserirRecursivo(No *no, const Musica &m, bool &ok); // "ok" indica se a inserção foi bem-sucedida
     No *removerRecursivo(No *no, int id, bool &ok);          // "ok" indica se a remoção foi bem-sucedida
     No *minimoRecursivo(No *no);
-    Musica *buscarRecursivo(No *no, int id);
+    Musica *buscarRecursivo(No *no, int id, int &acessos);
     void emOrdemRecursivo(No *no);
     int alturaRecursivo(No *no);
     int contarRecursivo(No *no);
     void destruir(No *no);
+    void TransformarVetorRecursivo(No *no, vector<Musica> &v, int &tamanho); // Copia as músicas da árvore para o vetor, contando quantas
 
 public:
     catalogoMusicas();           // Construtor para inicializar a árvore vazia
     ~catalogoMusicas();          // Destrutor para liberar a memória alocada para os nós da árvore
     bool inserir(Musica musica); // Insere uma música na árvore, retorna true se inserido com sucesso
-    Musica *buscarPorID(int id); // Busca uma música na árvore pelo ID, retorna ponteiro para a música se encontrada, nullptr caso contrário
+    Musica *buscarPorID(int id, int &acessos); // Busca uma música na árvore pelo ID, retorna ponteiro para a música se encontrada, nullptr caso contrário
     bool remover(int id);        // Remove uma música da árvore pelo ID, retorna true se removido com sucesso
     void listarEmOrdem();        // Lista todas as músicas da árvore em ordem crescente de ID
     int altura();                // Retorna a altura da árvore
     int contagemDeNos();         // Retorna a quantidade de nós na árvore
     int carregarMusicas(const string& nomeArquivo, catalogoMusicas &catalogo); // Função para carregar músicas de um arquivo de texto e inserir no catálogo, retorna a quantidade de músicas carregadas
-    bool incrementarReproducoes(int id); // Incrementa o contador de reproduções de uma música pelo ID, retorna true se incrementado com sucesso
+    bool incrementarReproducoes(int id, int &acessos); // Incrementa o contador de reproduções de uma música pelo ID, retorna true se incrementado com sucesso
+    vector<Musica> TransformarparaVetor(int &tamanho); // Retorna um vetor com todas as músicas do catálogo, tamanho recebe a quantidade
 };
 
 #endif
-// Identação com shift + alt + f, atalho do VS Code.
+// Identação com shift + alt + f, atalho do VS
