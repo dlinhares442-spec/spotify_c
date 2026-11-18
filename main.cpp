@@ -7,13 +7,12 @@
 #include "fila_reproducao.hpp"
 #include "busca.hpp"
 #include "ordenacao.hpp"
-// #include "teste.hpp"           // Ainda não usado: entra quando o modo de teste (19) for feito
+#include "teste.hpp"
 using namespace std;
 
 int main()
 {
     int opcao;
-    int nplaylist = 0;
     catalogoMusicas catalogo; // Crio um catalogo
     Playlist minhaplaylist;   // Cria a playlist
     FilaReproducao reproducao;
@@ -30,29 +29,32 @@ int main()
     do
     {
         cout << "\n------------- SPOTIPY -------------" << endl;
-        cout << "\n--- PLAYLIST ---" << endl; 
+        cout << "\n--- PLAYLIST ---" << endl;
         cout << " 1 - Adicionar musica (pelo ID)" << endl; // Adiciona uma música à playlist pelo ID
-        cout << " 2 - Remover musica" << endl; // Remove uma música da playlist pelo ID
-        cout << " 3 - Mover musica" << endl; // Move uma música para antes de outra música na playlist
-        cout << " 4 - Listar a playlist" << endl; // Lista todas as músicas da playlist, marcando a atual
-        cout << " 5 - Buscar na playlist (pelo nome)" << endl;
+        cout << " 2 - Remover musica" << endl;             // Remove uma música da playlist pelo ID
+        cout << " 3 - Mover musica" << endl;               // Move uma música para antes de outra música na playlist
+        cout << " 4 - Tocar proxima musica" << endl;       // Toca a próxima música da playlist e incrementa o contador de reproduções no catálogo
+        cout << " 5 - Tocar musica anterior" << endl;      // Volta para a música anterior da playlist e incrementa o contador de reproduções no catálogo
+        cout << " 6 - Mostrar musica atual" << endl;       // Mostra a música atual da playlist sem removê-la
+        cout << " 7 - Listar a playlist" << endl;          // Lista todas as músicas da playlist, marcando a atual
+        cout << " 8 - Buscar na playlist (pelo nome)" << endl;
         cout << "\n--- FILA DE REPRODUCAO ---" << endl;
-        cout << " 6 - Adicionar na fila" << endl; // Adiciona uma música à fila de reprodução pelo ID
-        cout << " 7 - Tocar proxima" << endl; // Toca a próxima música da fila de reprodução e incrementa o contador de reproduções no catálogo
-        cout << " 8 - Ver proxima" << endl; // Mostra a próxima música da fila de reprodução sem removê-la
-        cout << " 9 - Ver tamanho da fila" << endl; // Mostra a quantidade de músicas na fila de reprodução
+        cout << " 9 - Adicionar na fila" << endl;    // Adiciona uma música à fila de reprodução pelo ID
+        cout << " 10 - Tocar proxima" << endl;       // Toca a próxima música da fila de reprodução e incrementa o contador de reproduções no catálogo
+        cout << " 11 - Ver proxima" << endl;         // Mostra a próxima música da fila de reprodução sem removê-la
+        cout << " 12 - Ver tamanho da fila" << endl; // Mostra a quantidade de músicas na fila de reprodução
         cout << "\n--- CATALOGO (ABB) ---" << endl;
-        cout << "10 - Inserir musica" << endl; // Insere uma nova música no catálogo (ABB) com todas as informações
-        cout << "11 - Buscar por ID" << endl; // Busca uma música no catálogo (ABB) pelo ID e mostra todas as informações dela
-        cout << "12 - Remover musica" << endl; // Remove uma música do catálogo (ABB) pelo ID
-        cout << "13 - Listar em ordem de ID" << endl; // Lista todas as músicas do catálogo (ABB) em ordem crescente de ID
-        cout << "14 - Altura da arvore" << endl; // Mostra a altura da árvore (ABB)
-        cout << "15 - Quantidade de nos" << endl; // Mostra a quantidade de nós na árvore (ABB)
+        cout << "13 - Inserir musica" << endl;        // Insere uma nova música no catálogo (ABB) com todas as informações
+        cout << "14 - Buscar por ID" << endl;         // Busca uma música no catálogo (ABB) pelo ID e mostra todas as informações dela
+        cout << "15 - Remover musica" << endl;        // Remove uma música do catálogo (ABB) pelo ID
+        cout << "16 - Listar em ordem de ID" << endl; // Lista todas as músicas do catálogo (ABB) em ordem crescente de ID
+        cout << "17 - Altura da arvore" << endl;      // Mostra a altura da árvore (ABB)
+        cout << "18 - Quantidade de nos" << endl;     // Mostra a quantidade de nós na árvore (ABB)
         cout << "\n--- RANKING ---" << endl;
-        cout << "16 - Mostrar ranking (mais tocadas primeiro)" << endl; // Mostra o ranking ordenado por repetições das mais tocadas para as menos
-        cout << "17 - Musica mais reproduzida" << endl; // Mostra a musica com mais reproducoes
-        cout << "18 - Buscar no ranking por reproducoes" << endl; // Busca uma musica pela quantidade de reproduções
-        cout << "19 - Modo de teste (50, 500 e 5000 registros)" << endl;
+        cout << "19 - Mostrar ranking (mais tocadas primeiro)" << endl; // Mostra o ranking ordenado por repetições das mais tocadas para as menos
+        cout << "20 - Musica mais reproduzida" << endl;                 // Mostra a musica com mais reproducoes
+        cout << "21 - Buscar no ranking por reproducoes" << endl;       // Busca uma musica pela quantidade de reproduções
+        cout << "22 - Modo de teste (50, 500 e 5000 registros)" << endl;
         cout << "\n 0 - Sair" << endl;
         cout << "Escolha uma opcao: ";
         cin >> opcao;
@@ -60,7 +62,7 @@ int main()
         switch (opcao)
         {
         case 1:
-        {   
+        {
             int acessos = 0;
             cout << "Insira o ID da musica: ";
             cin >> id;
@@ -78,7 +80,6 @@ int main()
             }
 
             minhaplaylist.adicionar(*musicainserir); // Adiciona a música achada
-            nplaylist++;
             cout << "Musica adicionada com sucesso!" << endl;
             break;
         }
@@ -93,14 +94,13 @@ int main()
                 cout << "Falha ao remover musica da playlist." << endl;
                 break;
             }
-            nplaylist--;
             cout << "Musica removida com sucesso!" << endl;
             break;
         }
         case 3:
         {
             int idaux;
-            cout << "Insira o ID que você quer mover (A musica sera colocado atras da referencia): ";
+            cout << "Insira o ID que você quer mover (A musica sera colocado antes da referencia): ";
             cin >> id;
             cout << "Insira o ID que você usar de referência: ";
             cin >> idaux;
@@ -116,24 +116,66 @@ int main()
         }
         case 4:
         {
-            minhaplaylist.listar();
+            Musica *proxima = minhaplaylist.proxima(); // Avança para a próxima música, nullptr se vazia
+            if (proxima == nullptr)
+            {
+                cout << "Playlist vazia." << endl;
+                break;
+            }
+            int acessos = 0;
+            catalogo.incrementarReproducoes(proxima->id, acessos); // Incrementa o contador de reproduções no catálogo
+            cout << "Tocando: " << proxima->titulo << " - " << proxima->artista << endl;
             break;
         }
         case 5:
         {
-            int acessos=0;
+            Musica *anterior = minhaplaylist.anterior(); // Volta para a música anterior, nullptr se vazia
+            if (anterior == nullptr)
+            {
+                cout << "Playlist vazia." << endl;
+                break;
+            }
+            int acessos = 0;
+            catalogo.incrementarReproducoes(anterior->id, acessos); // Incrementa o contador de reproduções no catálogo
+            cout << "Tocando: " << anterior->titulo << " - " << anterior->artista << endl;
+            break;
+        }
+        case 6:
+        {
+            Musica *atual = minhaplaylist.musicaAtual(); // Mostra a música atual, nullptr se vazia
+            if (atual == nullptr)
+            {
+                cout << "Playlist vazia." << endl;
+                break;
+            }
+            cout << "Musica atual: " << atual->titulo << " - " << atual->artista << endl;
+            break;
+        }
+        case 7:
+        {
+            minhaplaylist.listar();
+            break;
+        }
+        case 8:
+        {
+            int acessos = 0;
             string nomemusica;
             cout << "Insira o nome da musica que voce quer buscar: ";
-            cin.ignore(); // Tira o enter de opcao
+            cin.ignore();             // Tira o enter de opcao
             getline(cin, nomemusica); // Lê o nome inteiro, mesmo com espaços
             int tamanho = 0;
             vector<Musica> v = minhaplaylist.TransformarparaVetor(tamanho);
             int pos = buscaSequencialNome(v.data(), tamanho, nomemusica, acessos);
-            if (pos == -1) { // Se a posição for -1 é porque ela não existe
+            if (pos == -1)
+            { // Se a posição for -1 é porque ela não existe
                 cout << "Musica nao encontrada na playlist." << endl;
                 break;
             }
             Musica achada = v[pos];
+            int ac = 0;
+            Musica *atualizada = catalogo.buscarPorID(achada.id, ac);
+            if (atualizada != nullptr)
+                achada = *atualizada;
             cout << "Titulo: " << achada.titulo << endl;
             cout << "Artista: " << achada.artista << endl;
             cout << "Duracao: " << achada.duracaoSegundos << "S" << endl;
@@ -141,7 +183,7 @@ int main()
             cout << "Comparacoes: " << acessos << endl;
             break;
         }
-        case 6:
+        case 9:
         {
             int acessos = 0;
             cout << "Insira o ID da musica: ";
@@ -156,22 +198,22 @@ int main()
             cout << "Musica adicionada com sucesso!" << endl;
             break;
         }
-        case 7:
+        case 10:
         {
             reproducao.tocarProxima(catalogo);
             break;
         }
-        case 8:
+        case 11:
         {
             reproducao.verProxima();
             break;
         }
-        case 9:
+        case 12:
         {
             reproducao.verTamanho();
             break;
         }
-        case 10:
+        case 13:
         {
             Musica novamusica;
 
@@ -199,7 +241,7 @@ int main()
 
             break;
         }
-        case 11:
+        case 14:
         {
             cout << "Insira o ID da musica: ";
             cin >> id;
@@ -216,7 +258,7 @@ int main()
             cout << "reproducoes: " << musicaachada->reproducoes << endl;
             break;
         }
-        case 12:
+        case 15:
         {
             cout << "Insira o ID da musica: ";
             cin >> id;
@@ -228,94 +270,105 @@ int main()
                 break;
             }
 
+            reproducao.removerPorId(id); // Remove a música da fila de reprodução, se estiver lá
+
             // A música saiu do catálogo, então também sai da playlist (se estiver lá)
             if (minhaplaylist.contem(id))
             {
                 minhaplaylist.remover(id);
-                nplaylist--; // Saiu da playlist, então diminui a quantidade de músicas
             }
 
             cout << "Musica removida com sucesso!" << endl;
             break;
         }
-        case 13:
+        case 16:
         {
-            catalogo.listarEmOrdem(); 
+            catalogo.listarEmOrdem();
             break;
         }
-        case 14:
+        case 17:
         {
             int altura = catalogo.altura();
             cout << "A altura e: " << altura << endl;
             break;
         }
-        case 15:
+        case 18:
         {
             int contagem = catalogo.contagemDeNos();
             cout << "A contagem e: " << contagem << endl;
             break;
         }
-        case 16:
+        case 19:
         {
             int tamanho = 0;
             int comparacoes = 0;
             int trocas = 0;
             vector<Musica> v = catalogo.TransformarparaVetor(tamanho);
-            if (tamanho == 0) { // Se o tamanho for 0 (não ter musicas no catalogo)
+            if (tamanho == 0)
+            { // Se o tamanho for 0 (não ter musicas no catalogo)
                 cout << "Catalogo vazio." << endl;
                 break;
-            } 
-            quickSort (v.data(), tamanho, comparacoes, trocas, 0, tamanho-1); // Naturalmente os vetores passam os endereços da primeira posição como parâmetro, mas não funciona ssim nessa biblioteca e então usamos a função data()
-            for (int i=0;i<tamanho;i++) {
-                cout << i+1 << " lugar: " << v[i].titulo << " - " << v[i].reproducoes << "repeticoes" << endl;
+            }
+            quickSort(v.data(), tamanho, comparacoes, trocas, 0, tamanho - 1); // Naturalmente os vetores passam os endereços da primeira posição como parâmetro, mas não funciona ssim nessa biblioteca e então usamos a função data()
+            for (int i = 0; i < tamanho; i++)
+            {
+                cout << i + 1 << " lugar: " << v[i].titulo << " - " << v[i].reproducoes << "repeticoes" << endl;
             }
             break;
         }
-        case 17:
+        case 20:
         {
             int tamanho = 0;
             int comparacoes = 0;
             int trocas = 0;
             vector<Musica> v = catalogo.TransformarparaVetor(tamanho);
-            if (tamanho == 0) { // Se o tamanho for 0 (não ter musicas no catalogo)
+            if (tamanho == 0)
+            { // Se o tamanho for 0 (não ter musicas no catalogo)
                 cout << "Catalogo vazio." << endl;
                 break;
-            } 
-            quickSort (v.data(), tamanho, comparacoes, trocas, 0, tamanho-1); // Naturalmente os vetores passam os endereços da primeira posição como parâmetro, mas não funciona ssim nessa biblioteca e então usamos a função data()
+            }
+            quickSort(v.data(), tamanho, comparacoes, trocas, 0, tamanho - 1); // Naturalmente os vetores passam os endereços da primeira posição como parâmetro, mas não funciona ssim nessa biblioteca e então usamos a função data()
             cout << "A musica mais tocada e: " << v.front().titulo << " - Reproducoes:" << v.front().reproducoes << endl;
             break;
         }
-        case 18:
+        case 21:
         {
             int tamanho = 0;
+            int comparacoes = 0;
+            int trocas = 0;
+            int acessos = 0;
             int repetir;
-            cout << "Insira a quantidade de repeticoes da música: ";
+
+            cout << "Insira a quantidade de reproducoes da musica: ";
             cin >> repetir;
+
             vector<Musica> v = catalogo.TransformarparaVetor(tamanho);
-            if (tamanho == 0) { // Se o tamanho for 0 (não ter musicas no catalogo)
+            if (tamanho == 0)
+            { // Catálogo vazio
                 cout << "Catalogo vazio." << endl;
                 break;
-            } 
-            Musica achada;
-            achada.id=-1;
-            for (int i=0;i<tamanho;i++) {
-                if (repetir==v[i].reproducoes) {
-                    achada = v[i];
-                    break;
-                }
             }
-            if (achada.id==-1) {
-                cout << "Nao existem musicas com essa quantidade de reproducoes" << endl;
+
+            // A busca binária exige o vetor ordenado pela mesma chave 
+            quickSort(v.data(), tamanho, comparacoes, trocas, 0, tamanho - 1);
+
+            int pos = buscaBinaria(v.data(), tamanho, repetir, acessos);
+            if (pos == -1)
+            {
+                cout << "Nao existem musicas com essa quantidade de reproducoes ("
+                     << acessos << " acessos)" << endl;
             }
-            else {
-                cout << "Musica encontrada: " << achada.titulo << endl;
+            else
+            {
+                cout << "Musica encontrada: " << v[pos].titulo << " - " << v[pos].artista
+                     << " (" << v[pos].reproducoes << " reproducoes, "
+                     << pos + 1 << "o lugar no ranking, " << acessos << " acessos)" << endl;
             }
             break;
         }
-        case 19:
+        case 22:
         {
-            // A espera do teste
-            cout << "Opcao ainda em construcao." << endl;
+            modoTeste();
             break;
         }
         case 0:
@@ -330,3 +383,4 @@ int main()
     } while (opcao != 0);
     return 0;
 }
+// Identação com shift + alt + f, atalho do VS Code.

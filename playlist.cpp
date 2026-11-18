@@ -1,4 +1,3 @@
-// Matheus Viana R. Pereira - Playlist com lista duplamente encadeada
 #include <iostream>
 #include "playlist.hpp"
 using namespace std;
@@ -40,8 +39,6 @@ bool Playlist::remover(int id)
     return false; // ID não encontrado
 }
 
-// Ainda não usadas no main: descomentar junto com as declarações no playlist.hpp
-/*
 Musica *Playlist::proxima()
 { // Avança para a próxima música (circular)
     if (musicas.empty())
@@ -80,7 +77,6 @@ Musica *Playlist::musicaAtual()
 
     return &(*atual);
 }
-*/
 
 list<Musica>::iterator Playlist::encontrar(int id)
 { // Procura uma música pelo ID na playlist

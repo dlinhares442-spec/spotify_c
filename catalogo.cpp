@@ -1,4 +1,3 @@
-// Matheus Viana R. Pereira - Catálogo de Músicas com ABB
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -77,7 +76,7 @@ No *catalogoMusicas::removerRecursivo(No *no, int id, bool &ok)
         else
         {
             No *temp = minimoRecursivo(no->direito);
-            no->musica = temp->musica; // Estava dando erro aqui não sei porque, mas compila
+            no->musica = temp->musica;
             no->direito = removerRecursivo(no->direito, temp->musica.id, ok);
         }
     }
@@ -196,7 +195,8 @@ int catalogoMusicas::carregarMusicas(const string &nomeArquivo, catalogoMusicas 
     return quantidade; // Retorna a quantidade de músicas adicionadas
 }
 
-bool catalogoMusicas::incrementarReproducoes(int id, int &acessos) {
+bool catalogoMusicas::incrementarReproducoes(int id, int &acessos)
+{
     Musica *m = buscarPorID(id, acessos);
     if (m == nullptr)
         return false;
@@ -205,7 +205,8 @@ bool catalogoMusicas::incrementarReproducoes(int id, int &acessos) {
 }
 
 // Algoritimo de busca na ABB
-Musica *catalogoMusicas::buscarRecursivo(No *no, int id, int &acessos) {
+Musica *catalogoMusicas::buscarRecursivo(No *no, int id, int &acessos)
+{
     if (no == nullptr)
     {
         return nullptr; // ID não encontrado
@@ -227,25 +228,29 @@ Musica *catalogoMusicas::buscarRecursivo(No *no, int id, int &acessos) {
     }
 }
 
-Musica *catalogoMusicas::buscarPorID(int id, int &acessos) {
+Musica *catalogoMusicas::buscarPorID(int id, int &acessos)
+{
     return buscarRecursivo(raiz, id, acessos);
 }
 
 // Aqui nos transformamos a árvore em um vetor para poder manipular ele de melhores formas nas demais estruturas (lista e fila), deixando assim a busca da ABB exclusiva para as funções de árvore
 
-void catalogoMusicas::TransformarVetorRecursivo(No *no, vector<Musica> &v, int &tamanho) {
-    if (no == nullptr) {// Não tem músicas no catálogo
+void catalogoMusicas::TransformarVetorRecursivo(No *no, vector<Musica> &v, int &tamanho)
+{
+    if (no == nullptr)
+    { // Não tem músicas no catálogo
         return;
     }
     TransformarVetorRecursivo(no->esquerdo, v, tamanho); // Olha a esquerda da árvore
-    v.push_back(no->musica); // puxa a musica do no atual para dentro do vetor; Aqui está com linha vermelha mas está compilando certinho (provável erro do editor)
+    v.push_back(no->musica);                             // puxa a musica do no atual para dentro do vetor; Aqui está com linha vermelha mas está compilando certinho (provável erro do editor)
     tamanho++;
     TransformarVetorRecursivo(no->direito, v, tamanho); // olha a direita da árvore
 }
 
-vector<Musica> catalogoMusicas::TransformarparaVetor(int &tamanho) {
+vector<Musica> catalogoMusicas::TransformarparaVetor(int &tamanho)
+{
     vector<Musica> v; // Cria o vetor
     TransformarVetorRecursivo(raiz, v, tamanho);
-    return v; 
+    return v;
 }
 // Identação com shift + alt + f, atalho do VS Code.
