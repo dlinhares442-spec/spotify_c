@@ -156,7 +156,6 @@ int catalogoMusicas::contagemDeNos()
     return contarRecursivo(raiz);
 }
 
-// Feitos por: Davi Linhares
 int catalogoMusicas::carregarMusicas(const string &nomeArquivo, catalogoMusicas &catalogo)
 {
     ifstream arquivo(nomeArquivo); // Abre o arquivo TXT e cria um objeto de leitura (Tipo o CIN) chamado arquivo
